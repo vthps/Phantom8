@@ -1,0 +1,49 @@
+// ================== 
+//        SET UP 
+// ==================
+
+/*
+initialize timer - serial begin
+set lcd screen 
+set arduino pins
+*/
+
+// ====================
+//  Process and Output
+// ====================
+
+RPM Sensors
+//Turn sensors on
+//Begin reading from sensors 
+//record and output values
+
+Accelerometer
+//read in accelerometer values
+//output values
+
+LCD Screen
+//Turn screen on
+//output data 
+
+Datalogger
+//run code
+//record all the values being read in
+//parse through information
+//save in new texts
+
+Dpad
+// {
+//	5 if statements with the 5 different buttons that could be pressed	
+// }
+// output statement being run 
+// run respective function
+
+
+Deadman Switch
+// {
+// 	bool, if true activate
+// }
+
+
+
+
