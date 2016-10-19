@@ -1,5 +1,5 @@
 # Phantom8
-This repo is all of the code for the Human Powered Submarine team of Virginia Tech
+This repo is all of the code for the Human Powered Submarine team of Virginia Tech for Phantom 8
 
 # Development process
 
