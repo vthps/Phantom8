@@ -1,25 +1,22 @@
 /*
  * Matthew Criss
- * Slack- matthewcriss
+ * mattc98@vt.edu
  * 11/2/16
  * 
- * This code creates a funtion, "pressure_function()" to call in the race code.
- * The function creates the output "velocity" and "depth" for use in the linear actuator and autonomous navigation codes.
- * Water testing will be preformed on 11/6/16.
- *
  * This file takes raw data from the pressure sensors, converts to voltage, then to psi.
  * The pressure is then used to calculate depth and velocity.
+ * 
  */
  
 //pins
 int static_sensor = A3;
 int dynamic_sensor = A4;
 
-//variables
+//variables                   //units
 double raw_static_pressure;   //ADC steps
 double raw_dynamic_pressure;  //ADC steps
 double static_voltage;        //volts
-double dynamic voltage;       //volts
+double dynamic voltage;       //voltsb
 double static_pressure;       //psi
 double dynamic_pressure;      //psi
 double depth;                 //ft
@@ -30,9 +27,14 @@ void setup() {
   
 }
 
-void pressure_function() {
-  // this function can be called for in the race code
+void loop() {
+  // 
 
+}
+
+void velocity_function() {
+  // this function can be called for in the race code and calculates veolcity
+ 
   //retrieve raw data
   raw_static_pressure = analogRead(static_sensor);
   raw_dynamic_pressure = analogRead(dynamic_sensor);
@@ -42,12 +44,26 @@ void pressure_function() {
   dynamic_voltage = (raw_dynamic_pressure/1024) *5;
 
   //convert volts to psi (1V = 6psi)
-  static_pressure = static_voltage * 5 + 14.697;
-  dynamic_pressure = dynamic_voltage * 5 + 14.697;
+  static_pressure = static_voltage * 6 + 14.697;
+  dynamic_pressure = dynamic_voltage * 6 + 14.697;
 
-  //calculated depth assuming 0.433psi/ft
   //calculated velocity using Bernoulli's Equation (see documentation)
-  depth = (static_pressure - 14.697) / 0.433;
   velocity = sqrt((2 * abs(static_pressure - dynamic_pressure)) / 1000);
-
+  
 }
+
+void depth_function() {
+  // this function can be called for in the race code and calculates depth
+
+  //retrieve raw data
+  raw_static_pressure = analogRead(static_sensor);
+
+  //convert from raw data to volts (5V = 1024 raw data increments)
+  static_voltage = (raw_static_pressure/1024) * 5;
+
+  //convert volts to psi (1V = 6psi)
+  static_pressure = static_voltage * 6 + 14.697;
+  
+  //calculated depth assuming 0.433psi/ft
+  depth = (static_pressure - 14.697) / 0.433;
+  
