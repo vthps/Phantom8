@@ -16,20 +16,33 @@ int dynamic_sensor = A4;
 double raw_static_pressure;   //ADC steps
 double raw_dynamic_pressure;  //ADC steps
 double static_voltage;        //volts
-double dynamic voltage;       //voltsb
-double static_pressure;       //psi
-double dynamic_pressure;      //psi
+double dynamic_voltage;       //volts
+double static_pressure;       //Pa
 double depth;                 //ft
 double velocity;              //m/s
 
 void setup() {
   // no setup required for pressure sensors
   
+  Serial.begin(9600);
+  
 }
 
 void loop() {
-  // 
 
+  // this loop is used for testing the pressure sensors
+  
+  depth_function();
+ 
+  Serial.print(" Raw: ");
+  Serial.print(raw_static_pressure);
+  Serial.print(" Voltage: ");
+  Serial.print(static_voltage);
+  Serial.print(" Pressure in Pa: ");
+  Serial.print(static_pressure);
+  Serial.print(" Depth: ");
+  Serial.println(depth);
+  
 }
 
 void velocity_function() {
@@ -43,9 +56,9 @@ void velocity_function() {
   static_voltage = (raw_static_pressure/1024) * 5;
   dynamic_voltage = (raw_dynamic_pressure/1024) *5;
 
-  //convert volts to psi (1V = 6psi)
-  static_pressure = static_voltage * 6 + 14.697;
-  dynamic_pressure = dynamic_voltage * 6 + 14.697;
+  //convert volts to Pascals (1V = 23,000Pa)
+  static_pressure = static_voltage * 23000;
+  dynamic_pressure = dynamic_voltage * 23000;
 
   //calculated velocity using Bernoulli's Equation (see documentation)
   velocity = sqrt((2 * abs(static_pressure - dynamic_pressure)) / 1000);
@@ -61,9 +74,10 @@ void depth_function() {
   //convert from raw data to volts (5V = 1024 raw data increments)
   static_voltage = (raw_static_pressure/1024) * 5;
 
-  //convert volts to psi (1V = 6psi)
-  static_pressure = static_voltage * 6 + 14.697;
+  //convert volts to Pascals (1V = 23,000Pa)
+  static_pressure = static_voltage * 23000;
   
-  //calculated depth assuming 0.433psi/ft
-  depth = (static_pressure - 14.697) / 0.433;
+  //calculated depth assuming 2988.98Pa/ft
+  depth = static_pressure / 2988.98;
   
+}
