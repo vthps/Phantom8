@@ -1,0 +1,6 @@
+void accelerometer_setup() {
+    
+}
+
+
+

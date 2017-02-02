@@ -5,6 +5,7 @@ void setup() {
     //lcd_setup(); //Setup LCD
     //servo_setup(); //Setup servos
     //datalogger_setup(); //Setup datalogging
+    //accelerometer_setup(); // Setup accelerometer
     
 }
 
@@ -25,8 +26,4 @@ void loop() {
     //Update servos and actuator
         //Update servos
         //Update actuator
-
-
-
-    
 }
