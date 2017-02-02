@@ -1,11 +1,11 @@
 void setup() {
     rpm_sensor_setup(); //Setup RPM Sensors
     setup_battery_monitor(); //Setup battery voltage monitoring
-    //pressure_sensor_setup(); //Setup Pressure sensors
+    pressure_sensor_setup(); //Setup Pressure sensors
     //lcd_setup(); //Setup LCD
     //servo_setup(); //Setup servos
-    //datalogger_setup(); //Setup datalogging
-    //accelerometer_setup(); // Setup accelerometer
+    datalogger_setup(); //Setup datalogging
+    controls_setup(); // Setup accelerometer
     
 }
 
