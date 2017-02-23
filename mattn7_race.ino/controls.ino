@@ -1,7 +1,3 @@
-void controls_setup() {
-    
-}
-
 #include <Servo.h>
 #include <helper_3dmath.h>
 #include <MPU6050_6Axis_MotionApps20.h>
@@ -20,6 +16,7 @@ int pin_dpad = 0;
 int PitchServo1 = 22;
 int PitchServo2 = 24;
 int LRServo = 26;
+int LR2Servo = 28;
 
 //custom data type for button pad
 enum Direction {NONE=0, UP=1, DOWN=2, LEFT=3, RIGHT=4, CENTER=5};
@@ -70,6 +67,7 @@ int Override = 2; //amount the servo changes when immediate override is used
 
 //Declaring servos
 Servo LR;
+Servo LR2;
 Servo UD1;
 Servo UD2;
 
@@ -129,9 +127,11 @@ void getBaseline()
 
   //Set up and zero the position of the servos
   LR.attach(LRServo);
+  LR2.attach(LRServo2);
   UD1.attach(PitchServo1);
   UD2.attach(PitchServo2);
   LR.write(LRPosition);
+  LR write(LRPosition);
   UD1.write(UDPosition);
   UD2.write(UDPosition);
 
@@ -177,6 +177,7 @@ void runAutoControls()
   
   //Change the position of the servos
   LR.write(LRPosition + (LRchange));
+  LR.write(LRPosition - (LRchange));
   UD1.write(UDPosition - (UDchange));
   UD2.write(UDPosition + (UDchange));
 }
@@ -253,9 +254,6 @@ void cruise()
     LRchange = (int)((YawP * YawPCoefficient) + (YawI * YawICoefficient) + (YawD * YawDCoefficient));
     UDchange = (int)((PitchP * PitchPCoefficient) + (PitchI * PitchICoefficient) + (PitchD * PitchDCoefficient));
   }
-  
-    Serial.print("\t");
-    Serial.println(LRchange);
     
   //Check if any buttons on the dpad have been pressed
   if (detectTransition(pin_dpad, 5, true)){
@@ -322,6 +320,7 @@ void cruise()
   
   //Change the position of the servos
   LR.write(LRPosition + (LRchange));
+  LR.write(LRPosition - (LRchange));
   UD1.write(UDPosition - (UDchange));
   UD2.write(UDPosition + (UDchange));
   
@@ -491,7 +490,3 @@ void getAccelerometerVals_sparkfun(){
         ypr_current[2] = atan(gravity.y / sqrt(gravity.x * gravity.x + gravity.z * gravity.z));
     }
 } //end getAccelerometerVals_sparkfun()
-
-
-
-
