@@ -25,4 +25,9 @@ void loop() {
     //Update servos and actuator
         runAutoControls(); //Run autopilot for controls
         //Update actuator
+
+
+    //If buoy is released {
+        //Buoy released = false; }
+        
 }
