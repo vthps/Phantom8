@@ -13,6 +13,7 @@ void loop() {
     double a = rpm_calculate(); //Read rpm into double variable
     double b = measure_battery();
 
+    cruise(); //Start auto controls with manual input available
 
 
     //Make Calculations
