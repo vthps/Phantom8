@@ -356,6 +356,17 @@ void dpad_getDirection(){
     //center if the voltage is 1.75-2.25V
     else if (value < 2.25 && value > 1.75){
         dpad_direction = CENTER;
+        // Code pasted from LCD
+        //this sequence is meant to be called less frequently because it takes more time to execute
+        //scroll to the next screen (the one to the right)
+        //you can also call oledController->getPrev() to scroll left
+        oledController->setIndex(oledController->getNext());
+        //printHeaders() will update the yellow header and the arrows on the bottom
+        headerChar++;
+        //oledController->setHeaderChar(headerChar);
+        oledController->printHeaders();
+        oledController->refresh();
+        // End Code pasted from LCD
     }
     
     else dpad_direction = NONE;

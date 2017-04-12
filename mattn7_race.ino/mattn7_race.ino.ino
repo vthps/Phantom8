@@ -1,9 +1,11 @@
+
 void setup() {
     rpm_sensor_setup(); //Setup RPM Sensors
     setup_battery_monitor(); //Setup battery voltage monitoring
     pressure_sensor_setup(); //Setup Pressure sensors
     //lcd_setup(); //Setup LCD
     datalogger_setup(); //Setup datalogging
+    oled_setup(); //Setup lcd screen
     
     getBaseline(); //Controls Setup. Needs 30 seconds when submarine is lined up to race
 }
