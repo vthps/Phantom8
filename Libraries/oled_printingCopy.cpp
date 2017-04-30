@@ -80,6 +80,11 @@ int PrintHPS::getPrev()
     return output;
 }
 
+int PrintHPS::getScreenType()
+{
+    return data[index].screenType;
+}
+
 void PrintHPS::setHeaderChar(char c){
 	extra_char_in_header = c;
 }
@@ -101,14 +106,23 @@ int PrintHPS::printHeaders()
 		oled->println("");
 		oled->setCursor(0,25);
 		oled->setTextSize(2);
-		oled->print("Autonomous");
-		oled->println("");
-		oled->setCursor(0,50);
-		oled->setTextSize(2);
-		oled->print("Manual");
+		oled->print("Auto");
+		//oled->println("");
+		//oled->setCursor(0,50);
+		//oled->setTextSize(2);
+		//oled->print("Manual");
 	}
 	else if (data[index].screenType == 1){
 		//autonomous screen
+		oled->clearDisplay();
+		oled->fillTriangle(54, 10, 54, 60, 110, 30, WHITE);
+	}
+	else if (data[index].screenType == 2){
+		oled->clearDisplay();
+		oled->setTextColor(WHITE, BLACK);
+		oled->setCursor(40, 30);
+		oled->setTextSize(2);
+		oled->print("START");
 	}
 	else{
 		oled->clearDisplay();
@@ -151,7 +165,7 @@ int PrintHPS::menuSelect(int pos)
 			oled->println("");
 			oled->setCursor(0,50);
 			oled->setTextSize(2);
-			oled->print("Manual");
+			//oled->print("Manual");
 			break;
 		case 2:
 			oled->setCursor(0,0);
@@ -164,9 +178,9 @@ int PrintHPS::menuSelect(int pos)
 			oled->println("");
 			oled->setCursor(0,50);
 			oled->setTextSize(2);
-			oled->print("Manual");
+			//oled->print("Manual");
 			break;
-		case 3:
+		/*case 3:
 			oled->setCursor(0,0);
 			oled->setTextSize(2);
 			oled->print("Zero");
@@ -178,7 +192,55 @@ int PrintHPS::menuSelect(int pos)
 			oled->setCursor(0,50);
 			oled->setTextSize(2);
 			oled->print("Manual!");
-			break;
+			break;*/
+	}
+	retval = oled->display();
+	return retval;
+}
+
+int PrintHPS::autoLeft()
+{
+	int retval = 0;
+	if (data[index].screenType == 1){
+		//arrow points left
+		oled->clearDisplay();
+		oled->fillTriangle(44, 30, 100, 10, 100, 60, WHITE);
+	}
+	retval = oled->display();
+	return retval;
+}
+
+int PrintHPS::autoRight()
+{
+	int retval = 0;
+	if (data[index].screenType == 1){
+		//arrow points right
+		oled->clearDisplay();
+		oled->fillTriangle(54, 10, 54, 60, 110, 30, WHITE);
+	}
+	retval = oled->display();
+	return retval;
+}
+
+int PrintHPS::autoUp()
+{
+	int retval = 0;
+	if (data[index].screenType == 1){
+		//arrow points up
+		oled->clearDisplay();
+		oled->fillTriangle(44, 60, 84, 60, 64, 5, WHITE);
+	}
+	retval = oled->display();
+	return retval;
+}
+
+int PrintHPS::autoDown()
+{
+	int retval = 0;
+	if (data[index].screenType == 1){
+		//arrow points down
+		oled->clearDisplay();
+		oled->fillTriangle(44, 5, 84, 5, 64, 60, WHITE);
 	}
 	retval = oled->display();
 	return retval;

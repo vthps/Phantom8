@@ -26,6 +26,7 @@ class PrintHPS
         int index;
         int size;
 		char extra_char_in_header;
+		//int screen;
 
     public:
         PrintHPS();
@@ -38,6 +39,7 @@ class PrintHPS
         void setIndex(int index);    //sets the index to a specific number, starts at 0
         int getNext();               //returns the next index in the array (implements a circular array)
         int getPrev();               //returns the previous index in the array (implements a circular array)
+		int getScreenType();         //returns current screen type (menu, auto, manual)
         int printHeaders();         //prints the current struct to the OLED
         int initialize_oled(byte addr = 0x3C);      //sets up the interface and displays the splash screen
         int refresh();              //displays the most recent numbers
@@ -46,6 +48,10 @@ class PrintHPS
 		//void drawPixel(int16_t x, int16_t y, uint16_t color) = 0;
 		void drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color);
 		int menuSelect(int pos);    //highlights options on menu screen based on user select
+		int autoLeft();
+		int autoRight();
+		int autoUp();
+		int autoDown();
 
         int printsomething();
 };
