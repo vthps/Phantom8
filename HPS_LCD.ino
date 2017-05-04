@@ -122,28 +122,28 @@ void dpad_getDirection() {
   Serial.print(value);
   Serial.print(" ");
 
-  //up if the voltage is 0.75-1.25V
-  if (value < 1.25 && value > 0.75) {
+  //up if the voltage is 1.02V plus or minus 0.1V (same tolerance for all)
+  if (value < 1.12 && value > 0.92) {
     dpad_direction = UP;
   }
 
-  //down if the voltage is 4.75-5.25V
-  else if (value < 5 && value > 4.75) {
+  //down if the voltage is 2.96V
+  else if (value < 3.06 && value > 2.86) {
     dpad_direction = DOWN;
   }
 
-  //left if the voltage is 3.75-4.25V
-  else if (value < 4.25 && value > 3.75) {
+  //left if the voltage is 4.99V
+  else if (value < 5.09 && value > 4.89) {
     dpad_direction = LEFT;
   }
 
-  //right if the voltage is 2.75-3.25V
-  else if (value < 3.25 && value > 2.75) {
+  //right if the voltage is 4.09V
+  else if (value < 4.19 && value > 3.99) {
     dpad_direction = RIGHT;
   }
 
-  //center if the voltage is 1.75-2.25V
-  else if (value < 2.25 && value > 1.75) {
+  //center if the voltage is 1.99V
+  else if (value < 2.09 && value > 1.89) {
     dpad_direction = CENTER;
   }
 
