@@ -1,0 +1,12 @@
+For compiling .cpp sources:
+avr-g++ -c -g -Os -std=gnu++11 -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -mmcu=atmega2560 -DF_CPU=16000000L -DARDUINO=10609 -DARDUINO_AVR_MEGA2560 -DARDUINO_ARCH_AVR I2Cdev.cpp -o I2Cdev.cpp.o
+
+For compiling .c sources:
+avr-gcc -c -g -Os -std=gnu11 -ffunction-sections -fdata-sections -mmcu=atmega2560 -DF_CPU=16000000L -DARDUINO=10609 -DARDUINO_AVR_MEGA2560 -DARDUINO_ARCH_AVR twi.c -o twi.c.o
+
+To build static library:
+avr-ar rcs library.a *.o
+
+To link:
+avr-gcc -Os -Wl,--gc-sections,--relax -mmcu=atmega2560 obj1.o obj2.o lib1.a lib2.a -o foo.elf
+
