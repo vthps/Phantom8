@@ -1,10 +1,11 @@
 /*
  * Matthew Criss
- * mattc98@vt.edu
- * 11/2/16
+ * slack: matthewcriss
+ * 5/7/17
  * 
- * This file takes raw data from the pressure sensors, converts to voltage, then to psi.
+ * This file takes raw data from the pressure sensors, converts to voltage, then to pascals.
  * The pressure is then used to calculate depth and velocity.
+ * Most code here is for testing and is marked as such.
  * 
  */
  
@@ -18,8 +19,10 @@ double raw_dynamic_pressure;  //ADC steps
 double static_voltage;        //volts
 double dynamic_voltage;       //volts
 double static_pressure;       //Pa
+double dynamic_pressure;      //Pa
 double depth;                 //ft
 double velocity;              //m/s
+double ftvelocity;            //ft/s used for testing to compare to AOE tow tank cart
 
 void setup() {
   // no setup required for pressure sensors
@@ -30,38 +33,54 @@ void setup() {
 
 void loop() {
 
-  // this loop is used for testing the pressure sensors
+  // this loop is used for testing the pressure sensors and does not need called for race code
   
   depth_function();
+  velocity_function();
  
-  Serial.print(" Raw: ");
+  Serial.print(" S Raw: ");
   Serial.print(raw_static_pressure);
-  Serial.print(" Voltage: ");
+  Serial.print(" S Voltage: ");
   Serial.print(static_voltage);
-  Serial.print(" Pressure in Pa: ");
+  Serial.print(" S Pressure: ");
   Serial.print(static_pressure);
+  Serial.print(" D Raw: ");
+  Serial.print(raw_dynamic_pressure);
+  Serial.print(" D Voltage: ");
+  Serial.print(dynamic_voltage);
+  Serial.print(" D Pressure: ");
+  Serial.print(dynamic_pressure);
   Serial.print(" Depth: ");
-  Serial.println(depth);
+  Serial.print(depth);
+  Serial.print(" Velocity(m/s): ");
+  Serial.print(velocity);
+  Serial.print(" Velocity(ft/s): ");
+  Serial.println(ftvelocity);
+
   
 }
 
 void velocity_function() {
   // this function can be called for in the race code and calculates veolcity
+  // the ftvelocity equation can be removed for the race code as it is for testing on the AOE tow tank
  
   //retrieve raw data
-  raw_static_pressure = analogRead(static_sensor);
+  raw_static_pressure = analogRead(static_sensor); // add/subtract constants to zero pressure sensors
   raw_dynamic_pressure = analogRead(dynamic_sensor);
 
   //convert from raw data to volts (5V = 1024 raw data increments)
   static_voltage = (raw_static_pressure/1024) * 5;
   dynamic_voltage = (raw_dynamic_pressure/1024) *5;
 
-  //convert volts to Pascals (1V = 23,000Pa)
-  static_pressure = static_voltage * 23000;
-  dynamic_pressure = dynamic_voltage * 23000;
+  //convert volts to Pascals (1V = 5500Pa)
+  static_pressure = static_voltage * 5500; //Add Pa to these to zero the sensors to the same Pa if needed
+  dynamic_pressure = dynamic_voltage * 5500;
 
-  //calculated velocity using Bernoulli's Equation (see documentation)
+  //calculated velocity in m/s using Bernoulli's Equation (see documentation)
   velocity = sqrt((2 * abs(static_pressure - dynamic_pressure)) / 1000);
+
+  //converts velocity in m/s to velocity in ft/s for use during tow tank testing(1m = 3.281ft)
+  ftvelocity = velocity * 3.281;
   
 }
 
@@ -74,8 +93,8 @@ void depth_function() {
   //convert from raw data to volts (5V = 1024 raw data increments)
   static_voltage = (raw_static_pressure/1024) * 5;
 
-  //convert volts to Pascals (1V = 23,000Pa)
-  static_pressure = static_voltage * 23000;
+  //convert volts to Pascals (1V = 5500Pa)
+  static_pressure = static_voltage * 5500;
   
   //calculated depth assuming 2988.98Pa/ft
   depth = static_pressure / 2988.98;
