@@ -1,0 +1,27 @@
+For compiling .cpp sources:
+avr-g++ -c -g -Os -std=gnu++11 -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -mmcu=atmega2560 -DF_CPU=16000000L -DARDUINO=10609 -DARDUINO_AVR_MEGA2560 -DARDUINO_ARCH_AVR I2Cdev.cpp -o I2Cdev.cpp.o
+
+For compiling .c sources:
+avr-gcc -c -g -Os -std=gnu11 -ffunction-sections -fdata-sections -mmcu=atmega2560 -DF_CPU=16000000L -DARDUINO=10609 -DARDUINO_AVR_MEGA2560 -DARDUINO_ARCH_AVR twi.c -o twi.c.o
+
+To build static library:
+avr-ar rcs library.a *.o
+
+To link:
+avr-gcc -Os -Wl,--gc-sections,--relax -mmcu=atmega2560 obj1.o obj2.o lib1.a lib2.a -o foo.elf
+
+Don't change main.cpp. setup() and loop() are in hps.cpp, this is where the main loop runs. common.h contains common variables/function prototypes for anything accessed in hps.cpp.
+battery.cpp - Battery voltage monitoring - DONE
+controls.cpp/h - Controls code - DONE
+lcd.cpp/h - Code integrated from cynth branch - TODO
+actuator.cpp/h - Coode for propellor pitch - TODO
+rpm.cpp - Measure propellor rpm - DONE
+datalogger.cpp - Datalogging code - TODO
+Makefile - Tested on OSX, should work on linux. Just define SERIAL_PORT when calling make program. For windows you can just run the commands above, compiler is in Arduino application folder. - DONE
+i.e. 'make program SERIAL_PORT=/dev/tty.usbmodem1421' or 'make program SERIAL_PORT=COM3'
+
+libraries/ contain all the libraries that we are including
+cores/ contains the arduino core. The core files have already been compiling and linked in megaCore.a
+objects/ contains the .o files from compiling.
+
+
