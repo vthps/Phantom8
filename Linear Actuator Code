@@ -1,0 +1,162 @@
+#include <math.h>
+
+String input_string = "";
+boolean stringComplete = false;
+boolean targetHit = false;
+
+const int COUNT_THRESHOLD = 700;
+
+const int ACTUATOR_MIN = 180;
+const int ACTUATOR_MAX = 570;
+
+const int LENGTH_MIN = 0;
+const int LENGTH_MAX = 3;
+
+const int pin_pot = A8;
+const int pin_actPOS = A11; // attach to pin 9 on bridge A11
+const int pin_actGND = 17; // atach to  pin 1 on bridge 17
+
+//pin 2 of actuator to pin 3 on bridge
+//pin 4 of actuator to pin 7 on bridge
+
+const int tolerance = 1;
+const int stop_tol = 1;
+
+int adc_val;
+int target = -1;
+int perceived_position;
+int actuator_hit_count = 0;
+
+enum Actuator_State {
+  EXTEND, RETRACT, NO_MOTION
+} actuator_state;
+
+void setup() {
+    Serial.begin(9600);
+    input_string.reserve(200);
+}
+
+void loop() {
+  adc_val = analogRead(pin_pot);
+
+ if (target < 0) {
+    target = adc_val;
+  }
+  if (perceived_position == NULL){
+    perceived_position = adc_val;
+  }
+  
+ if (stringComplete) {
+    float input_value = input_string.toFloat();
+    if (!(input_value == 0 && !input_string.startsWith("0"))) {
+      target = target_value(input_value);
+      Serial.print(input_value);
+      Serial.print("\n");
+      Serial.print(target);
+      Serial.print("\n");
+    }
+    else {
+      Serial.print(adc_val);
+      Serial.print("\n");
+      Serial.print(actuator_state);
+      Serial.print("\n");
+    }
+    input_string = "";
+    stringComplete = false;
+  }
+  if (target - perceived_position != 0) {
+      set_pins(target - adc_val);
+
+ }
+  
+}
+
+/**
+ * returns target value on the potentiometera
+ * for a given length (ONLY WORKS FOR WHICHEVER
+ * ACTUATOR THE CODE IS CURRENTLY CALIBRATED FOR)
+ * May expand to index all formulae
+ */
+int target_value(float length) {
+    if (length < LENGTH_MIN) {
+      return ACTUATOR_MIN;
+    }
+    else if (length > LENGTH_MAX) {
+      return ACTUATOR_MAX;
+    }
+    else {
+      targetHit = false;
+      actuator_hit_count = 0;
+            
+     float val =  15.26*pow(length,3)-36.18*pow(length,2)+101.7*length+179.69; //calculated model for
+      if (val < ACTUATOR_MIN) {                                     //63:1 actuator A
+        return ACTUATOR_MIN;
+      }
+      else if (val > ACTUATOR_MAX) {
+        return ACTUATOR_MAX;
+      }
+      else {
+        return val;
+      }
+    }
+}
+/**
+ * Sets actuator to retract, extend,
+ * or stay put, based on the difference
+ * between the target value and the
+ * recorded value
+ */
+
+void set_pins(int difference) {
+    //stop actuators
+    if (abs(difference) <= stop_tol) {
+        actuator_hit_count++;
+        if(actuator_hit_count > COUNT_THRESHOLD) {
+          targetHit=true;
+          perceived_position = target;
+        }
+    }
+    else if (!targetHit) {
+       //Serial.print(difference);
+       //Serial.print("\n");
+    }
+    if (abs(difference) <= tolerance && targetHit) {
+        digitalWrite(pin_actGND, LOW);
+        digitalWrite(pin_actPOS, LOW);
+        //Serial.print("STOP");
+        actuator_state = NO_MOTION;
+    }
+    //retract actuators
+    else if (difference > 0 && !targetHit) {
+      digitalWrite(pin_actGND, LOW);
+      digitalWrite(pin_actPOS, HIGH);
+      //Serial.print("RETRACT");
+      actuator_state = RETRACT;
+    }
+    else if (difference < 0 && !targetHit) {
+      digitalWrite(pin_actGND, HIGH);
+      digitalWrite(pin_actPOS, LOW);
+      //Serial.print("EXTEND");
+      actuator_state = EXTEND;
+    }
+}
+
+/*
+  SerialEvent occurs whenever a new data comes in the
+ hardware serial RX.  This routine is run between each
+ time loop() runs, so using delay inside loop can delay
+ response.  Multiple bytes of data may be available.
+ */
+void serialEvent() {
+  while (Serial.available()) {
+    // get the new byte:
+    char inChar = (char)Serial.read();
+    // add it to the inputString:
+    input_string += inChar;
+    // if the incoming character is a newline, set a flag
+    // so the main loop can do something about it:
+    if (inChar == '\n') {
+      stringComplete = true;
+    }
+  }
+}
